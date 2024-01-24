@@ -16,11 +16,11 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->date('tanggal');
             $table->unsignedInteger('urut');
-            $table->string('nomor_surat', 9);
+            $table->string('nomor', 9);
             $table->string('perihal');
             $table->string('keterangan')->nullable();
             $table->timestamps();
-            $table->unique(['tanggal', 'nomor_surat']);
+            $table->unique(['tanggal', 'nomor']);
         });
     }
 

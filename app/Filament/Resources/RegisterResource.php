@@ -54,9 +54,9 @@ class RegisterResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('tanggal')
                     ->date('d F Y'),
-                Tables\Columns\TextColumn::make('nomor_surat')
+                Tables\Columns\TextColumn::make('nomor')
                     ->copyable()
-                    ->copyMessage('Nomor surat sudah disalin')
+                    ->copyMessage('Nomor sudah disalin')
                     ->icon('heroicon-m-document-duplicate')
                     ->iconPosition(IconPosition::After)
                     ->weight(FontWeight::Bold),

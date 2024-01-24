@@ -23,7 +23,7 @@ class ManageRegisters extends ManageRecords
                 ->using(function (array $data, string $model): Model {
                     $register = $this->generateRegister($data['tanggal']);
                     $data['user_id'] = auth()->id();
-                    $data['nomor_surat'] = $register['number'];
+                    $data['nomor'] = $register['number'];
                     $data['urut'] = $register['index'];
 
                     return $model::create($data);
