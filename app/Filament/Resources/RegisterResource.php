@@ -7,8 +7,11 @@ use App\Models\Register;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class RegisterResource extends Resource
 {
@@ -23,6 +26,7 @@ class RegisterResource extends Resource
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('tanggal')
+                    ->disabled(fn (string $operation): bool => $operation === 'edit')
                     ->required(),
                 Forms\Components\TextInput::make('perihal')
                     ->required()
@@ -36,43 +40,37 @@ class RegisterResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->paginated(false)
+            ->defaultGroup(
+                Tables\Grouping\Group::make('tanggal')
+                    ->getTitleFromRecordUsing(
+                        fn (Register $record): string => $record->tanggal->translatedFormat('d F Y')
+                    )
+                    ->orderQueryUsing(
+                        fn (Builder $query, string $direction) => $query->orderBy('tanggal', 'desc')
+                    )
+                    ->titlePrefixedWithLabel(false),
+            )
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('tanggal')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('urut')
-                    ->numeric()
-                    ->sortable(),
+                    ->date('d F Y'),
                 Tables\Columns\TextColumn::make('nomor_surat')
-                    ->searchable(),
+                    ->copyable()
+                    ->copyMessage('Nomor surat sudah disalin')
+                    ->icon('heroicon-m-document-duplicate')
+                    ->iconPosition(IconPosition::After)
+                    ->weight(FontWeight::Bold),
                 Tables\Columns\TextColumn::make('perihal')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('keterangan')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
+                Tables\Columns\TextColumn::make('keterangan'),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Pengguna')
+                    ->visible(fn (): bool => auth()->id() === 1),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);
-        // ->bulkActions([
-        //     Tables\Actions\BulkActionGroup::make([
-        //         Tables\Actions\DeleteBulkAction::make(),
-        //     ]),
-        // ]);
     }
 
     public static function getPages(): array
@@ -80,5 +78,10 @@ class RegisterResource extends Resource
         return [
             'index' => Pages\ManageRegisters::route('/'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->owned();
     }
 }
