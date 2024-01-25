@@ -9,7 +9,7 @@ Aplikasi web sederhana untuk pencatatan nomor register dokumen, dibangun dengan 
 Unduh kode sumber
 
 ```bash
-git clone git@github.com:arifnd/register-dokumen.git
+git clone https://github.com/arifnd/register-dokumen.git
 cd register-dokumen
 composer install
 cp .env.example .env
