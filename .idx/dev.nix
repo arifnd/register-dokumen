@@ -30,12 +30,7 @@
     workspace = {
       # Runs when a workspace is first created
       onCreate = {
-        composer-install = "composer install";
-        copy-environment = "cp .env.example .env";
-        generate-key = "php artisan key:generate";
-        change-connection = "sed -i 's/DB_CONNECTION=mysql/DB_CONNECTION=sqlite/' .env";
-        set-database = "sed -i \"s|DB_DATABASE=laravel|DB_DATABASE=$(pwd)/database/database.sqlite|\" .env";
-        migrate-database = "php artisan migrate --seed --force";
+        project-setup = "./.idx/setup.sh";
       };
     };
   };
