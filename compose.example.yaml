@@ -1,6 +1,9 @@
 services:
   php:
-    image: dunglas/frankenphp
+    # uncomment the following line to use a version of PHP that supports your application
+    image: dunglas/frankenphp #php8.4
+    # image: dunglas/frankenphp:php8.3
+    # image: dunglas/frankenphp:php8.2
     # uncomment the following line if you want to use a custom Dockerfile
     #build: .
     # uncomment the following line if you want to run this in a production environment
